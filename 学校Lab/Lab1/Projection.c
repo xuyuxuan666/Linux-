@@ -28,7 +28,7 @@ int main() {
         string1[i] = *(addr+i);        
     }
 
-    printf("\n");  
+    printf("\n");
 
     char string[buf.st_size];   //Définir le string du fichier après la transformation(inverser)
     for(int i=0;i<buf.st_size/2;i++){ 
@@ -44,7 +44,6 @@ int main() {
     //Puisque nous sommes sûrs que les initiales sont différentes, nous déterminons par les initiales si elles sont transformées
      
     if(string[0] != string1[0]){
-        
         printf(" \nbien été inversé");
     }
     else{
