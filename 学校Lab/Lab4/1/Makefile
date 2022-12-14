@@ -2,7 +2,7 @@ CFLAGS := -g -Wall -Wextra
 LDFLAGS := -L.
 LDLIBS := -lseg
 
-BIN := segserv segclt segclt_old
+BIN := segserv_2021 segclt segclt_old
 LIB := libseg.a
 
 all: $(LIB) $(BIN)

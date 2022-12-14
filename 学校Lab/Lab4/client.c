@@ -24,7 +24,8 @@ int semid;
 int shmid;
 segment* ptshm;
 
-void myWait_sem(int semid, int sem){
+/*fonction Wait_sem : attend que le sémaphore sem passe à 0*/
+void new_wait_sem(int semid, int sem){
     struct sembuf sops;
     sops.sem_num=sem;
     sops.sem_op=0;
@@ -35,7 +36,8 @@ void myWait_sem(int semid, int sem){
     }
 }
 
-void myAcq_sem(int semid, int sem){
+/*fonction Acq_sem : tente d’acquérir le sémaphore sem*/
+void new_acq_sem(int semid, int sem){
     struct sembuf sops;
     sops.sem_num=sem;
     sops.sem_op=-1;
@@ -46,8 +48,8 @@ void myAcq_sem(int semid, int sem){
     }
     
 }
-
-void myLib_sem(int semid, int sem){
+/*fonction Lib_sem : libère le sémaphore sem*/
+void new_lib_sem(int semid, int sem){
     struct sembuf sops;
     sops.sem_num=sem;
     sops.sem_op=1;
@@ -81,13 +83,14 @@ void init(){ //ipcs to check
 int main(){
     
     fork();
+    fork();
     long sum=0;
     //0
     init();
-    //printf("semid=%d\n",semid);
+    printf("semid=%d\n",semid);
     //printf("shmid=%d\n",shmid);
     //1
-    myAcq_sem(semid,seg_dispo);
+    acq_sem(semid,seg_dispo);
     //2
     ptshm->pid=getpid();
     ptshm->req=1;
@@ -97,17 +100,17 @@ int main(){
         sum=sum+ptshm->tab[i];
     }
     sum=sum/maxval;   
-    myAcq_sem(semid,seg_init);
+    acq_sem(semid,seg_init);
     //3
-    myWait_sem(semid,res_ok);
+    wait_sem(semid,res_ok);
     //4
     long res=ptshm->result;
-    myLib_sem(semid,seg_init);
+    lib_sem(semid,seg_init);
     //5
-    myAcq_sem(semid,res_ok); //check if res_ok is free
-    myLib_sem(semid,res_ok);
+    acq_sem(semid,res_ok); //check if res_ok is free
+    lib_sem(semid,res_ok);
     //6
-    myLib_sem(semid,seg_dispo);
+    lib_sem(semid,seg_dispo);
     //7
     if(sum!=res){
         printf("ERROR: the result is wrong \n");
